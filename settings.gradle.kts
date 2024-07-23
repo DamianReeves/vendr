@@ -5,4 +5,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "KotlinNativeTemplate"
+rootProject.name = "vendr"
+

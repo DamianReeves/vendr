@@ -1,5 +1,8 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+
 plugins {
-    kotlin("multiplatform") version "1.9.20-RC2"
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 group = "me.user"
@@ -10,27 +13,26 @@ repositories {
 }
 
 kotlin {
-    val hostOs = System.getProperty("os.name")
-    val isArm64 = System.getProperty("os.arch") == "aarch64"
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
-        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    macosX64()
+    macosArm64()
+    linuxX64()
+    mingwX64()
+    jvm().mainRun {
+        mainClass.set("MainKt")
     }
 
-    nativeTarget.apply {
+    targets.withType<KotlinNativeTarget> {
         binaries {
             executable {
+                baseName = "vendr"
                 entryPoint = "main"
+                runTask?.run {
+                    val args = providers.gradleProperty("runArgs")
+                    argumentProviders.add(CommandLineArgumentProvider {
+                        args.orNull?.split(' ') ?: emptyList()
+                    })
+                }
             }
         }
-    }
-    sourceSets {
-        val nativeMain by getting
-        val nativeTest by getting
     }
 }
