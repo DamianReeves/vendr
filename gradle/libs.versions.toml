@@ -3,5 +3,10 @@
 # Dependencies
 kotlin = "2.0.0"
 
+clikt = "4.2.1"
+
+[libraries]
+clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
+
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

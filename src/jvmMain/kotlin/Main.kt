@@ -1,3 +1,3 @@
-fun main() {
-    kotlin.io.println("Hello, Kotlin/JVM!")
-}
+import io.eleven19.vendr.Hello
+
+fun main(args: Array<String>) = Hello().main(args)
